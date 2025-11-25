@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Color Picker</title>
+    <style>
+        /* Basic styling for the page */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+
+        /* Styling for the main container */
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        /* Styling for the button */
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Styling for the color display area */
+        #color-display {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        /* Styling for an individual color box */
+        .color-box {
+            width: 120px;
+            height: 120px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; 
+            align-items: center;
+            padding: 10px 0;
+            box-sizing: border-box;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.5s ease;
+        }
+
+        .color-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333; /* Default text color */
+            /* Adjusted text-shadow for better contrast on varying colors */
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8); 
+            margin-top: 5px;
+            padding: 2px 5px;
+            border-radius: 3px;
+            background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent background for text */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Random Color Selector</h1>
+    <button id="color-button">Pick Two Colors</button>
+
+    <div id="color-display">
+        <div id="color-one" class="color-box">
+            <span class="color-name">#FFFFFF</span>
+        </div>
+        <div id="color-two" class="color-box">
+            <span class="color-name">#FFFFFF</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    // List of 18 specified colors (Name: Hex Code)
+    const COLOR_MAP = {
+        'Sage': '#A9B388',
+        'Olive Green': '#6A7E35',
+        'Bottle Green': '#006A4E',
+        'Navy': '#000080',
+        'Aqua': '#00FFFF',
+        'Light Sky Blue': '#87CEFA',
+        'Sky Blue': '#87CEEB',
+        'Pastel Yellow': '#FDFD96',
+        'Lemon': '#FFF700',
+        'Sunflower': '#FFDA03',
+        'Mustard': '#FFDB58',
+        'Coral': '#FF7F50',
+        'Peach': '#FFE5B4',
+        'Blush': '#DE5D83',
+        'Hot Pink': '#FF69B4',
+        'Tomato': '#FF6347',
+        'Cranberry': '#C5023E',
+        'Bordeaux': '#5B0017'
+    };
+
+    // Extracting just the hex codes for the random selection array
+    const COLORS = Object.values(COLOR_MAP); 
+    // Creating a reverse map to easily look up the name from the hex code for display
+    const HEX_TO_NAME = Object.fromEntries(
+        Object.entries(COLOR_MAP).map(([name, hex]) => [hex, name])
+    );
+
+    const button = document.getElementById('color-button');
+    const colorOneBox = document.getElementById('color-one');
+    const colorTwoBox = document.getElementById('color-two');
+    const colorOneName = colorOneBox.querySelector('.color-name');
+    const colorTwoName = colorTwoBox.querySelector('.color-name');
+
+    /**
+     * Selects two unique random colors (hex codes) from the COLORS array.
+     */
+    function selectRandomColors() {
+        if (COLORS.length < 2) {
+            console.error("Not enough colors in the list.");
+            return [];
+        }
+
+        let index1 = Math.floor(Math.random() * COLORS.length);
+        let index2;
+
+        // Ensure the two indices are different
+        do {
+            index2 = Math.floor(Math.random() * COLORS.length);
+        } while (index1 === index2);
+
+        return [COLORS[index1], COLORS[index2]];
+    }
+
+    /**
+     * Updates the display boxes with the selected colors and their names.
+     */
+    function updateColorDisplay() {
+        const [colorHex1, colorHex2] = selectRandomColors();
+        const colorName1 = HEX_TO_NAME[colorHex1];
+        const colorName2 = HEX_TO_NAME[colorHex2];
+
+        // Apply the first color
+        colorOneBox.style.backgroundColor = colorHex1;
+        colorOneName.textContent = `${colorName1} (${colorHex1})`;
+
+        // Apply the second color
+        colorTwoBox.style.backgroundColor = colorHex2;
+        colorTwoName.textContent = `${colorName2} (${colorHex2})`;
+    }
+
+    // Attach the event listener to the button
+    button.addEventListener('click', updateColorDisplay);
+
+    // Initial call to display colors on load
+    updateColorDisplay();
+</script>
+
+</body>
+</html>
